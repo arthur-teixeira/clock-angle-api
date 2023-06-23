@@ -1,6 +1,8 @@
 package main
 
 import (
+	"clock-angle-api/structs"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math"
@@ -38,6 +40,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+
     hourDegrees := float64(hoursInt * DEGREES_PER_HOUR) + (float64(minutesInt) * 0.5)
     minuteDegrees := float64(minutesInt * DEGREES_PER_MINUTE)
 
@@ -45,10 +48,11 @@ func hello(w http.ResponseWriter, r *http.Request) {
     outerAngle := 360 - innerAngle
 
     diff := math.Min(innerAngle, outerAngle)
+    res, _ := json.Marshal(structs.Response{Angle: diff})
 
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK)
-    fmt.Fprintf(w, "Difference in angle: %.2f\n", diff)
+    w.Write(res)
 }
 
 func main() {
