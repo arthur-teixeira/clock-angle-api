@@ -27,6 +27,10 @@ func ValidateParams(r *http.Request) (*structs.Request, error) {
 }
 
 func validateMinutes(minutes string) (int, error) {
+    if minutes == "" {
+        return 0, nil
+    }
+
     minutesInt, err := strconv.Atoi(minutes) 
     if err != nil {
         return 0, errors.New("Minutes should be a number")
@@ -40,6 +44,10 @@ func validateMinutes(minutes string) (int, error) {
 }
 
 func validateHours(hours string) (int, error) {
+    if hours == "" {
+        return 0, errors.New("Hours is required")
+    }
+
     hoursInt, err := strconv.Atoi(hours) 
     if err != nil {
         return 0, errors.New("Hours should be a number")
@@ -49,5 +57,5 @@ func validateHours(hours string) (int, error) {
         return 0, errors.New("The maximum value for hours is 24")
     }
 
-    return hoursInt % 12, nil
+    return hoursInt, nil
 }
