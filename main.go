@@ -8,7 +8,6 @@ import (
 
 func main() {
     controller := controller.NewAngleController()
-
 	http.HandleFunc("/api/v1/angle", controller.GetAngle)
 	err := http.ListenAndServe(":3000", nil)
 	if err != nil {

@@ -21,6 +21,7 @@ func (controller AngleController) GetAngle(w http.ResponseWriter, r *http.Reques
 		w.WriteHeader(http.StatusMethodNotAllowed)
         return
 	}
+
     params, err := validator.ValidateParams(r)
     if err != nil {
         controller.badRequest(w, err.Error())
@@ -36,6 +37,9 @@ func (controller AngleController) GetAngle(w http.ResponseWriter, r *http.Reques
 
     repo := repository.NewAngleRepository(conn)
     service := service.NewAngleService(repo)
+
+    migration := repository.NewMigrationRepository(conn)
+    migration.Migrate()
 
     result, err := service.GetAngle(params)
     if err != nil {
