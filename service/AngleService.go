@@ -9,6 +9,7 @@ import (
 const (
 	DEGREES_PER_HOUR     = 30
 	DEGREES_PER_MINUTE   = 6
+    HOURS_PER_ROTATION   = 12
 )
 
 type AngleService struct {
@@ -47,7 +48,7 @@ func (service AngleService) GetAngle(params *structs.Request) (*structs.Response
 }
 
 func (service AngleService) calculateAngle(params *structs.Request) int {
-    hourDegrees := float64((params.Hours % 12)*DEGREES_PER_HOUR) + (float64(params.Minutes) * 0.5)
+    hourDegrees := float64((params.Hours % HOURS_PER_ROTATION)*DEGREES_PER_HOUR) + (float64(params.Minutes) * 0.5)
     minuteDegrees := float64(params.Minutes * DEGREES_PER_MINUTE)
 
     innerAngle := math.Floor(math.Abs(hourDegrees - minuteDegrees))
