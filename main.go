@@ -43,7 +43,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/api/v1/hello", hello)
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":3000", nil)
 	if err != nil {
 		log.Fatalln("Error starting server: ", err)
 	}
