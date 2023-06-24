@@ -5,7 +5,8 @@ Ela retorna sempre o menor ângulo entre os ponteiros, ou seja, se o ângulo ent
 ## Como usar
 Para usar a API, basta fazer uma requisição GET para o endpoint /api/clock, passando os parâmetros hours e minutes, como no exemplo abaixo:
 ```
-http://localhost:3000/api/clock?hours=3&minutes=30
+curl --request GET \
+  --url 'http://localhost:3000/api/clock?hours=13&minutes=30'
 ```
 O retorno será um JSON com o ângulo entre os ponteiros, como no exemplo abaixo:
 ```json
@@ -13,10 +14,14 @@ O retorno será um JSON com o ângulo entre os ponteiros, como no exemplo abaixo
   "angle": 75
 }
 ```
+O parâmetro hours deve ser um número inteiro entre 0 e 23,
+e o parâmetro minutes deve ser um número inteiro entre 0 e 59.
+Minutes é opcional, caso não seja passado, será considerado 0.
+
 
 ## Como executar
 Após clonar o repositório, basta rodar o comando abaixo:
 ```sh 
-sudo docker compose up
+$ sudo docker compose up
 ```
 
