@@ -6,7 +6,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .:/usr/src/app
+      - .:/go/src/
+    command: go run main.go
 
   db:
     image: postgres:latest
