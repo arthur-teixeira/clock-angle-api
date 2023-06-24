@@ -1,5 +1,5 @@
 package structs
 
 type Response struct {
-    Angle float64 `json:"angle"`
+    Angle int `json:"angle"`
 }

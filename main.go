@@ -2,12 +2,11 @@ package main
 
 import (
 	"clock-angle-api/structs"
+	"clock-angle-api/validator"
 	"encoding/json"
-	"fmt"
 	"log"
 	"math"
 	"net/http"
-	"strconv"
 )
 
 const (
@@ -22,32 +21,19 @@ func hello(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
         return
 	}
-    params := r.URL.Query()
-
-    hours := params.Get("hours") 
-    hoursInt, err := strconv.Atoi(hours) 
+    params, err := validator.ValidateParams(r)
     if err != nil {
-        fmt.Fprintf(w, "Error: Hours should be a number")
+        w.WriteHeader(http.StatusBadRequest)
+        res, _ := json.Marshal(structs.Error{Message: err.Error()})
+        w.Write(res)
         return
     }
 
-    hoursInt = hoursInt % HOURS_PER_ROTATION
+    hourDegrees := float64(params.Hours * DEGREES_PER_HOUR) + (float64(params.Minutes) * 0.5)
+    minuteDegrees := float64(params.Minutes * DEGREES_PER_MINUTE)
 
-    minutes := params.Get("minutes")
-    minutesInt, err := strconv.Atoi(minutes) 
-    if err != nil {
-        fmt.Fprintf(w, "Error: Hours should be a number")
-        return
-    }
+    diff := int(math.Floor(math.Abs(hourDegrees - minuteDegrees)))
 
-
-    hourDegrees := float64(hoursInt * DEGREES_PER_HOUR) + (float64(minutesInt) * 0.5)
-    minuteDegrees := float64(minutesInt * DEGREES_PER_MINUTE)
-
-    innerAngle := math.Abs(hourDegrees - minuteDegrees)
-    outerAngle := 360 - innerAngle
-
-    diff := math.Min(innerAngle, outerAngle)
     res, _ := json.Marshal(structs.Response{Angle: diff})
 
 	w.Header().Set("Content-Type", "application/json")
