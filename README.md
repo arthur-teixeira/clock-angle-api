@@ -25,3 +25,8 @@ Após clonar o repositório, basta rodar o comando abaixo:
 $ sudo docker compose up
 ```
 
+## Como executar os testes
+Para executar os testes, basta rodar o comando abaixo:
+```sh 
+$ go test -v ./...
+```
