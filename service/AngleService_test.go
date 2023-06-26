@@ -8,7 +8,7 @@ import (
 
 type MockAngleRepository struct {
     repository.IAngleRepository
-    angle structs.Angle
+    Angle structs.Angle
     inserted bool
 }
 
@@ -16,13 +16,8 @@ func newMockAngleRepository() *MockAngleRepository {
     return &MockAngleRepository{}
 }
 
-func (repo MockAngleRepository) SetAngle(angle int) {
-    repo.angle.Id = 1
-    repo.angle.Angle = angle
-}
-
 func (repo MockAngleRepository) GetAngle(params *structs.Request) (*structs.Angle, error) {
-    return &repo.angle, nil
+    return &repo.Angle, nil
 }
 
 func (repo *MockAngleRepository) SaveAngle(params *structs.Request, angle int) error {
@@ -32,7 +27,11 @@ func (repo *MockAngleRepository) SaveAngle(params *structs.Request, angle int) e
 
 func TestAngleInDb(t *testing.T) {
     repo := newMockAngleRepository()
-    repo.SetAngle(90)
+    repo.Angle = structs.Angle{
+        Id: 1,
+        Angle: 90,
+    }
+
     service := NewAngleService(repo)
     params := &structs.Request{
         Hours: 3,
@@ -65,5 +64,19 @@ func TestAngleNotInDb(t *testing.T) {
 
     if (!repo.inserted) {
         t.Errorf("Expected angle to be inserted into db")
+    }
+}
+
+func TestComplementaryAngle(t *testing.T) {
+    repo := newMockAngleRepository()
+    service := NewAngleService(repo)
+    params := &structs.Request{
+        Hours: 12,
+        Minutes: 55,
+    }
+
+    angle, _ := service.GetAngle(params)
+    if angle.Angle != 58 {
+        t.Errorf("Expected angle to be 58, got %v", angle.Angle)
     }
 }
